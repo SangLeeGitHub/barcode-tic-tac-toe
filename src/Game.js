@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
+import socketIOClient from "socket.io-client";
 import './Game.css';
 
 function Square(props) {
+
     return (
         <button
             className="square"
@@ -13,88 +15,108 @@ function Square(props) {
 }
 
 class Board extends Component {
-  constructor(props) {
-      super(props);
-      this.state = {
-          squares: Array(9).fill(null),
-          xIsNext: true,
-      }
-  }
 
-  handleClick(i) {
-    const squares = this.state.squares.slice();
-
-    if (calculateWinner(squares) || squares[i]) {
-        return;
+    constructor(props) {
+        super(props);
+        this.state = {
+            squares: Array(9).fill(null),
+            xIsNext: true,
+            endpoint: "http://localhost:4001",
+            sIndex: 0,
+        }
     }
 
-    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    handleClick(i) {
+        console.log("handleClick:", i);
+        console.log("sIndex:", this.state.sIndex);
 
-    this.setState({
-        squares: squares,
-        xIsNext: !this.state.xIsNext,
-    });
-  }
+        const squares = this.state.squares.slice();
 
-  renderSquare(i) {
-    return (
-        <Square
-            value={this.state.squares[i]}
-            onClick={()=>this.handleClick(i)}
-        />
-    )
-  }
+        if (calculateWinner(squares) || squares[i]) {
+            return;
+        }
 
-  render() {
-    const winner = calculateWinner(this.state.squares);
-    let status;
-    if (winner) {
-        status = "Winner: " + winner;
-    }
-    else {
-        status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+
+        this.setState({
+            squares: squares,
+            xIsNext: !this.state.xIsNext,
+        });
     }
 
-    return (
-        <div>
-          <div className="status">{status}</div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
-        </div>
-    );
-  }
+    renderSquare(i) {
+        return (
+            <Square
+                value={this.state.squares[i]}
+                onClick={()=>this.handleClick(i)}
+            />
+        )
+    }
+
+    componentDidMount() {
+        const {endpoint} = this.state;
+        const socket = socketIOClient(endpoint);
+        socket.on("FromAPI", data => {
+            this.handleClick(data);
+        });
+        socket.on("sIndex", data => {
+            this.setState({sIndex: data});
+        });
+    }
+
+    render() {
+        const winner = calculateWinner(this.state.squares);
+        let status;
+
+        if (winner) {
+            status = "Winner: " + winner;
+        }
+        else {
+            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+        }
+
+        return (
+            <div>
+                <div className="status">{status}</div>
+                <div className="board-row">
+                    {this.renderSquare(0)}
+                    {this.renderSquare(1)}
+                    {this.renderSquare(2)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(3)}
+                    {this.renderSquare(4)}
+                    {this.renderSquare(5)}
+                </div>
+                <div className="board-row">
+                    {this.renderSquare(6)}
+                    {this.renderSquare(7)}
+                    {this.renderSquare(8)}
+                </div>
+            </div>
+        );
+    }
 }
 
 class Game extends Component {
-  render() {
-    return (
-        <div className="game">
-          <div className="game-board">
-            <Board />
-          </div>
-          <div className="game-info">
-            <div>{/* status */}</div>
-            <ol>{/* TODO */}</ol>
-          </div>
-        </div>
-    );
-  }
+
+    render() {
+        return (
+            <div className="game">
+                <div className="game-board">
+                    <Board />
+                </div>
+                <div className="game-info">
+                    <div>{/* status */}</div>
+                    <ol>{/* TODO */}</ol>
+                </div>
+            </div>
+        );
+    }
 }
 
 function calculateWinner(squares) {
+
     const lines = [
         [0, 1, 2],
         [3, 4, 5],
