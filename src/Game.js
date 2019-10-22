@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 import socketIOClient from "socket.io-client";
 import './Game.css';
+import JsBarcode from "jsbarcode";
 
 function Square(props) {
+    let style = (props.value === "O" || props.value === "X") ? {display: "none"} : {height: "200vh", width: "200vw"};
 
     return (
-        <button
-            className="square"
-            onClick={props.onClick}
-            >
+        <button className="square" onClick={props.onClick}>
+            <svg id={"barcode" + props.idx} style={style}></svg>
             {props.value}
         </button>
     );
@@ -21,7 +21,7 @@ class Board extends Component {
         this.state = {
             squares: Array(9).fill(null),
             xIsNext: true,
-            endpoint: "http://localhost:4001",
+            endpoint: "http://netrol.com",
             sIndex: 0,
         }
     }
@@ -47,6 +47,7 @@ class Board extends Component {
     renderSquare(i) {
         return (
             <Square
+                idx={i}
                 value={this.state.squares[i]}
                 onClick={()=>this.handleClick(i)}
             />
@@ -55,12 +56,15 @@ class Board extends Component {
 
     componentDidMount() {
         const {endpoint} = this.state;
-        const socket = socketIOClient(endpoint);
+        const socket = socketIOClient(endpoint, {'path': '/ttta/socket.io'});
         socket.on("FromAPI", data => {
             this.handleClick(data);
         });
         socket.on("sIndex", data => {
             this.setState({sIndex: data});
+
+            for (let j = 0; j < 9; j++)
+                JsBarcode("#barcode" + j, this.state.sIndex + ":" + j, {width: 5, height: 170, fontSize: 40});
         });
     }
 
@@ -77,7 +81,8 @@ class Board extends Component {
 
         return (
             <div>
-                <div className="status">{status}</div>
+                <div className="status" style={{display: 'flex', justifyContent: 'center', fontSize: 36}}>{status}</div>
+                <div></div>
                 <div className="board-row">
                     {this.renderSquare(0)}
                     {this.renderSquare(1)}

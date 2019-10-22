@@ -4,6 +4,8 @@
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.6.3",
+    "canvas": "^2.6.0",
+    "jsbarcode": "^3.11.0",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "react-scripts": "3.2.0",
@@ -29,5 +31,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "homepage" : "https://netrol.com/ttt"
 }
