@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="20721389-46a0-4179-a7ae-5333e11ce3d4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Game.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Game.js" afterDir="false" />
     </list>
@@ -85,6 +84,7 @@
     <MESSAGE value="1st commit" />
     <MESSAGE value="2st commit" />
     <MESSAGE value="Add a part of communication with server" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add a part of communication with server" />
+    <MESSAGE value="Add displaying the barcodes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add displaying the barcodes" />
   </component>
 </project>

@@ -81,7 +81,7 @@ class Board extends Component {
 
         return (
             <div>
-                <div className="status" style={{display: 'flex', justifyContent: 'center', fontSize: 36}}>{status}</div>
+                <div className="status" style={{display: 'flex', justifyContent: 'center', fontSize: 28}}>{status}</div>
                 <div></div>
                 <div className="board-row">
                     {this.renderSquare(0)}
